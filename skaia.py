@@ -122,6 +122,10 @@ class Skaia(BaseHTTPRequestHandler):
                 self.end_headers()
                 return
 
+            self.send_response(200)
+            self.send_header("Content-type", "text/plain")
+            self.end_headers()
+
             users = self.queue.get_allowed_users()
             out_data = json.dumps({
                 'TYPE': 'FULL',
