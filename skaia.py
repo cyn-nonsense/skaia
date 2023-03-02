@@ -116,6 +116,24 @@ class Skaia(BaseHTTPRequestHandler):
             self.wfile.write(out_data.encode('utf-8'))
             return
 
+        if self.path == "/full_queue":
+            if self.headers['Token'] != TOKEN:
+                self.send_response(400)
+                self.end_headers()
+                return
+
+            users = self.queue.get_allowed_users()
+            out_data = json.dumps({
+                'TYPE': 'FULL',
+                'COUNT': len(self.queue.queue),
+                'USERS': self.queue.queue,
+                'READY': len(users),
+                'CANJOIN': users
+            })
+
+            self.wfile.write(out_data.encode('utf-8'))
+            return
+
         self.send_response(404)
         self.end_headers()
 
